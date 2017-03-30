@@ -154,7 +154,8 @@
             <form role="form" method="POST">
               <div class="form-group">
                 <div class="form-group">
-                  <input type="text" name="flx_cod" id="flx_cod" value="" disabled="disabled">
+                  <label>Código *</label>
+                  <input class="form-control" type="text" name="flx_cod" id="flx_cod" value="" disabled="disabled">
                 </div>
                 <div class="form-group">
                   <label>Situação *</label>

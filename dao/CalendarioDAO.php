@@ -3,8 +3,8 @@
 // MVC = controller
 // objeto = Calendario
 
-  require_once($_SERVER['DOCUMENT_ROOT'] . '/model/Calendario.class.php');
-  require_once($_SERVER['DOCUMENT_ROOT'] . '/lib/BD.class.php');
+  require_once('../model/Calendario.class.php');
+  require_once('../lib/BD.class.php');
 
   class CalendarioDAO {
 
@@ -20,9 +20,11 @@
         $register->bindValue(2, $calendario->__get("cld_dia"));
         $register->bindValue(3, $calendario->__get("cld_evt"));
         $register->bindValue(4, $calendario->__get("cld_tpo"));
-        $register->execute();
 
-        return 1;
+        if ($register->execute())
+          return 1;
+
+        return 0;
       } catch (Exception $e) {
         //echo "Failed: " . $e->getMessage();
       }
@@ -45,9 +47,11 @@
         $update->bindValue(2, $calendario->__get("cld_evt"));
         $update->bindValue(3, $calendario->__get("cld_tpo"));
         $update->bindValue(4, $calendario->__get("cld_dta"));
-        $update->execute();
 
-        return 1;
+        if($update->execute())
+          return 1;
+
+        return 0;
       } catch (Exception $e) {
         //die("Unable to connect: " . $e->getMessage());
       }
@@ -63,9 +67,11 @@
 
         $remove = $dbh->prepare($sql);
         $remove->bindValue(1, $cld_dta);
-        $remove->execute();
 
-        return 1;
+        if ($remove->execute())
+          return 1;
+
+        return 0;
       } catch (Exception $e) {
         //echo "Failed: " . $e->getMessage();
       }
@@ -101,10 +107,12 @@
       try {
         $dbh = Connection::connect();
 
-        $sql = "SELECT * FROM tab_cld";
+        $sql = "SELECT * FROM tab_cld ORDER BY cld_dta";
 
         $search = $dbh->prepare($sql);
-        $search->execute();
+        
+        if (!$search->execute())
+          return 0;
 
         while ($cld = $search->fetch(PDO::FETCH_ASSOC)) {
           $aux = new Calendario();

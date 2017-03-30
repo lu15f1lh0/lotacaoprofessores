@@ -3,7 +3,7 @@
 // MVC = controller
 // objeto = Calendario
 
-require_once($_SERVER['DOCUMENT_ROOT'] . '/dao/CalendarioDAO.php');
+require_once('../dao/CalendarioDAO.php');
 
 class CalendarioController {
 
@@ -22,7 +22,7 @@ class CalendarioController {
     return $calendarioDAO->remove($cld_dta);
   }
 
-  public function search () {
+  public function search ($data) {
     $calendarioDAO = new CalendarioDAO();
     return $calendarioDAO->search();
   }
