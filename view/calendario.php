@@ -1,7 +1,7 @@
 <?php
-  require_once('../controller/SalaController.php');
+  require_once('../controller/CalendarioController.php');
 
-  $salaController = new SalaController();
+  $calendarioController = new CalendarioController();
 
 ?>
 <!doctype html>
@@ -11,7 +11,7 @@
     <link rel="icon" type="image/png" href="assets/img/favicon.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-    <title>LotaProf | Sala</title>
+    <title>LotaProf | Calendário</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -45,61 +45,61 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="card card-plain">
-                  <?php
-                    if (isset($_POST["Adicionar"])) {
-                      $sala = new Sala();
-                      $sala->__set("sla_nom", $_POST["sla_nom"]);
-                      $sala->__set("sla_cap", $_POST["sla_cap"]);
-                      if ($salaController->register($sala)) { ?>
+                 <?php
+                  if (isset($_POST["Adicionar"])) {
+                    $calendario = new Calendario();
+                    $calendario->__set("cld_dta", date_format(date_create(implode("-",array_reverse(explode("/",$_POST["cld_dta"])))), 'Y-m-d'));
+                    $calendario->__set("cld_evt", $_POST["cld_evt"]);
+                    $calendario->__set("cld_tpo", $_POST["cld_tpo"]);
+                    if ($calendarioController->register($calendario)) { ?>
                       <div class="alert alert-success alert-with-icon" data-notify="container">
                         <span data-notify="icon" class="pe-7s-date"></span>
-                        <span data-notify="message">Sala adicionada com sucesso!</span>
+                        <span data-notify="message">Evento adicionado com sucesso!</span>
                       </div>
                     <?php } else { ?>
                       <div class="alert alert-danger alert-with-icon" data-notify="container">
                         <span data-notify="icon" class="pe-7s-date"></span>
-                        <span data-notify="message">Ocorreu um erro ao tentar adicionar a sala.</span>
+                        <span data-notify="message">Ocorreu um erro ao tentar adicionar o evento.</span>
                       </div>
                     <?php }
-                    } else
-                    if (isset($_POST["Excluir"])) {
-                      if ($salaController->remove($_POST["sla_codx"])) { ?>
+                  } else
+                  if (isset($_POST["Excluir"])) {
+                    if ($calendarioController->remove($_POST["cld_dtax"])) { ?>
                       <div class="alert alert-success alert-with-icon" data-notify="container">
                         <span data-notify="icon" class="pe-7s-date"></span>
-                        <span data-notify="message">Sala excluída com sucesso!</span>
+                        <span data-notify="message">Evento excluído com sucesso!</span>
                       </div>
                     <?php } else { ?>
                       <div class="alert alert-danger alert-with-icon" data-notify="container">
                         <span data-notify="icon" class="pe-7s-date"></span>
-                        <span data-notify="message">Ocorreu um erro ao tentar excluir a sala.</span>
+                        <span data-notify="message">Ocorreu um erro ao tentar excluir o evento.</span>
                       </div>
                     <?php }
-                    } else
-                    if (isset($_POST["Editar"])) {
-                      $sala = new Sala();
-                      $sala->__set("sla_cod", $_POST["sla_cod"]);
-                      $sala->__set("sla_cap", $_POST["sla_cap"]);
-                      $sala->__set("sla_nom", $_POST["sla_nom"]);
-                      if ($salaController->update($sala)) { ?>
+                  } else
+                  if (isset($_POST["Editar"])) {
+                    $calendario = new Calendario();
+                    $calendario->__set("cld_dta", $_POST["cld_dta"]);
+                    $calendario->__set("cld_evt", $_POST["cld_evt"]);
+                    $calendario->__set("cld_tpo", $_POST["cld_tpo"]);
+                    if ($calendarioController->update($calendario)) { ?>
                       <div class="alert alert-success alert-with-icon" data-notify="container">
                         <span data-notify="icon" class="pe-7s-date"></span>
-                        <span data-notify="message">Sala editada com sucesso!</span>
+                        <span data-notify="message">Evento editado com sucesso!</span>
                       </div>
                     <?php } else { ?>
                       <div class="alert alert-danger alert-with-icon" data-notify="container">
                         <span data-notify="icon" class="pe-7s-date"></span>
-                        <span data-notify="message">Ocorreu um erro ao tentar editar a sala.</span>
+                        <span data-notify="message">Ocorreu um erro ao tentar editar o evento.</span>
                       </div>
                     <?php }
-                    }
+                  }
 
-                    $salas = $salaController->searchAll();
-                  ?>
-
+                  $calendarios = $calendarioController->searchAll();
+                ?>
                   <div class="header">
-                    <h4 class="title">Salas</h4>
+                    <h4 class="title">Eventos</h4>
                     <p class="category">
-                      Lista de salas cadastradas
+                      Lista de eventos cadastradas
                       <span class="pull-right">
                         <button type="button" class="btn btn-success btn-fill" data-toggle="modal" data-target="#add">
                           Adicionar
@@ -110,19 +110,21 @@
                   <div class="content table-responsive table-full-width">
                     <table class="table table-striped table-hover" id="dataTables-example">
                       <thead>
-                        <th class="col-xs-7 col-sm-7 col-md-7 col-lg-7">Nome</th>
-                        <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3">Capacidade</th>
+                        <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Data</th>
+                        <th class="col-xs-6 col-sm-6 col-md-6 col-lg-6">Nome</th>
+                        <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Tipo</th>
                         <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Ações</th>
                       </thead>
                       <tbody>
-<?php foreach ($salas as $sala) { ?>
+<?php foreach ($calendarios as $calendario) { ?>
                         <tr>
-                          <td><?php echo $sala->__get("sla_nom"); ?></td>
-                          <td><?php echo $sala->__get("sla_cap"); ?></td>
+                          <td><?php echo date_format(date_create($calendario->__get("cld_dta")), 'd/m/Y'); ?></td>
+                          <td><?php echo $calendario->__get("cld_evt"); ?></td>
+                          <td><?php echo ($calendario->__get("cld_tpo") == "1" ? "Feriado" : ($calendario->__get("cld_tpo") == "3" ? "Facultativo" : "-")); ?></td>
                           <td>
-                            <a data-toggle="modal" data-cod="<?php echo $sala->__get("sla_cod"); ?>" data-nom="<?php echo $sala->__get("sla_nom"); ?>" data-cap="<?php echo $sala->__get("sla_cap"); ?>" title="Editar" class="openEdit btn btn-warning" href="#edit"><span class="pe-7s-note" aria-hidden="true"></span></a>
+                            <a data-toggle="modal" data-dta="<?php echo $calendario->__get("cld_dta"); ?>" data-evt="<?php echo $calendario->__get("cld_evt"); ?>" data-tpo="<?php echo $calendario->__get("cld_tpo"); ?>" title="Editar" class="openEdit btn btn-warning" href="#edit"><span class="pe-7s-note" aria-hidden="true"></span></a>
 
-                            <a data-toggle="modal" data-cod="<?php echo $sala->__get("sla_cod"); ?>" data-nom="<?php echo $sala->__get("sla_nom"); ?>" title="Excluir" class="openDelete btn btn-danger" href="#delete"><span class="pe-7s-trash" aria-hidden="true"></span></a>
+                            <a data-toggle="modal" data-dta="<?php echo $calendario->__get("cld_dta"); ?>" data-evt="<?php echo $calendario->__get("cld_evt"); ?>" title="Excluir" class="openDelete btn btn-danger" href="#delete"><span class="pe-7s-trash" aria-hidden="true"></span></a>
                           </td>
                         </tr>
 <?php } ?>
@@ -144,12 +146,12 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title"><span class="pe-7s-display2"></span> Excluir Sala</h4>
+            <h4 class="modal-title"><span class="pe-7s-date"></span> Excluir Evento</h4>
           </div>
           <div class="modal-footer">
             <form role="form" method="POST">
-              <input type="hidden" name="sla_codx" id="sla_codx" value="">
-              <p>Você deseja excluir a sala <b id="sla_nomx"></b>?</p>
+              <input type="hidden" name="cld_dtax" id="cld_dtax" value="">
+              <p>Você deseja excluir o evento "<b id="cld_evtx"></b>"?</p>
               <input type="button" class="btn btn-danger btn-fill" data-dismiss="modal" value="Não">
               <input type="submit" class="btn btn-success btn-fill" value="Sim" name="Excluir">
             </form>
@@ -164,21 +166,25 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="edit"><span class="pe-7s-display2"></span> Editar Sala</h4>
+            <h4 class="modal-title" id="edit"><span class="pe-7s-date"></span> Editar Evento</h4>
           </div>
           <div class="modal-body">
             <form role="form" method="POST">
-              <div class="form-group">
-                <input type="hidden" name="sla_cod" id="sla_cod" value="">
+                <div class="form-group">
+                  <label>Data</label>
+                  <input class="form-control" type="text" name="cld_dta" id="cld_dta" value="" readonly>
+                </div>
                 <div class="form-group">
                   <label>Nome</label>
-                  <input class="form-control" type="text" name="sla_nom" id="sla_nom" value="" required autocomplete="off">
+                  <input class="form-control" type="text" name="cld_evt" id="cld_evt" value="" required autocomplete="off">
                 </div>
                 <div class="form-group">
-                  <label>Capacidade</label>
-                  <input class="form-control" type="number" min="1" step="1" name="sla_cap" id="sla_cap" value="" required autocomplete="off">
+                  <label>Tipo *</label>
+                  <select class="form-control" name="cld_tpo" id="cld_tpo" required>
+                    <option value="1">Feriado</option>
+                    <option value="3">Facultativo</option>
+                  </select>
                 </div>
-              </div>
           </div>
           <div class="modal-footer">
             <input type="button" class="btn btn-warning btn-fill" data-dismiss="modal" value="Cancelar">
@@ -195,18 +201,24 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="add"><span class="pe-7s-display2"></span> Adicionar Sala</h4>
+            <h4 class="modal-title" id="add"><span class="pe-7s-date"></span> Adicionar Evento</h4>
           </div>
           <div class="modal-body">
             <form role="form" method="POST">
               <div class="form-group">
-                <label>Nome *</label>
-                <input class="form-control" placeholder="Nome da Sala" name="sla_nom" required autocomplete="off">
-              </div>
-              <div class="form-group">
-                <label>Capacidade *</label>
-                <input class="form-control" type="number" min="1" step="1" placeholder="Capacidade da Sala" name="sla_cap" required autocomplete="off">
-              </div>
+                  <label>Data</label>
+                  <input class="form-control" type="text" name="cld_dta" id="cld_dta" placeholder="01/01/2017" required autocomplete="off" onkeyup="mascara( this, mskDate );" maxlength="10" min="10" max="10">
+                </div>
+                <div class="form-group">
+                  <label>Nome</label>
+                  <input class="form-control" type="text" name="cld_evt" id="cld_evt" placeholder="Nome do Evento" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                  <label>Tipo *</label>
+                  <select class="form-control" name="cld_tpo" id="cld_tpo" required>
+                    <option value="1">Feriado</option>
+                    <option value="3">Facultativo</option>
+                  </select>
           </div>
           <div class="modal-footer">
             <input type="submit" class="btn btn-success btn-fill" value="Adicionar" name="Adicionar" id="Adicionar">
@@ -244,23 +256,32 @@
   <!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
   <script src="assets/js/demo.js"></script>
 
+  <script src="assets/js/mask.js"></script>
+
   <script type="text/javascript">
     $(document).on("click", ".openEdit", function () {
-      var sla_cod = $(this).data('cod');
-      $(".modal-body #sla_cod").val(sla_cod);
-      var sla_nom = $(this).data('nom');
-      $(".modal-body #sla_nom").val(sla_nom);
-      var sla_cap = $(this).data('cap');
-      $(".modal-body #sla_cap").val(sla_cap);
+      var cld_dta = $(this).data('dta');
+      cld_dta = cld_dta.substr(8,2) + "/" + cld_dta.substr(5,2) + "/" + cld_dta.substr(0,4);
+      $(".modal-body #cld_dta").val(cld_dta);
+      var cld_evt = $(this).data('evt');
+      $(".modal-body #cld_evt").val(cld_evt);
+      var cld_tpo = $(this).data('tpo');
+      $(".modal-body #cld_tpo").val(cld_tpo);
     });
   </script>
 
   <script type="text/javascript">
     $(document).on("click", ".openDelete", function () {
-      var sla_cod = $(this).data('cod');
-      $(".modal-footer #sla_codx").val( sla_cod );
-      var sla_nom = $(this).data('nom');
-      $(".modal-footer #sla_nomx").html(sla_nom);
+      var cld_dta = $(this).data('dta');
+      $(".modal-footer #cld_dtax").val( cld_dta );
+      var cld_evt = $(this).data('evt');
+      $(".modal-footer #cld_evtx").html(cld_evt);
+    });
+  </script>
+
+  <script>
+    $(".alert").fadeTo(4000, 500).slideUp(1000, function(){
+      $(".alert").slideUp(4000);
     });
   </script>
 </html>
